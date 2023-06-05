@@ -1,0 +1,20 @@
+plugins {
+    id 'java'
+}
+
+repositories {
+    mavenCentral()
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
+
+dependencies {
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.11.+'
+
+    testImplementation 'io.cucumber:cucumber-java:6.8.+'
+    testImplementation 'io.cucumber:cucumber-junit:6.8.+'
+    testImplementation 'io.rest-assured:rest-assured:4.3.+'
+}
