@@ -24,8 +24,9 @@ public class PetStepDefinitions {
 
     private PetApi petApi;
     private List<Pet> actualPets;
+    private Response actualPetsResponse;
 
-    public PetStepDefinitions(){
+    public PetStepDefinitions() {
         petApi = new PetApi();
     }
 
@@ -52,24 +53,49 @@ public class PetStepDefinitions {
     public void euReceboUmaOutraListaDeAnimaisAvailable(String status) {
         Response actualPetsResponse = petApi.getPetsResponseByStatus(status);
 
-        actualPets = actualPetsResponse.body().jsonPath().getList("",Pet.class);
+        actualPets = actualPetsResponse.body().jsonPath().getList("", Pet.class);
 
         actualPetsResponse.
-            then().
+                then().
                 statusCode(HttpStatus.SC_OK).
-            body(
-                    "size()", is(actualPets.size()),
-                    "findAll { it.status == 'available' }.size()", is(actualPets.size())
-            );
+                body(
+                        "size()", is(actualPets.size()),
+                        "findAll { it.status == 'available' }.size()", is(actualPets.size())
+                );
     }
 
-    @Entao("recebo a lista com {int} animal/animais")
-    public void receboAListaComAnimais(int petsQuantity) {
-        assertThat(actualPets, is(petsQuantity));
+    @Entao("eu recebo a lista com {} animal/animais")
+    public void euReceboAListaComAnimais(int petsQuantity) {
+        assertThat(actualPets.size(), is(petsQuantity));
     }
 
     @Dado("que eu nao possua animais {word}")
     public void queEuNaoPossuaAnimaisSold(String status) {
         petApi.deletePetsByStatus(status);
+    }
+
+    @Quando("pesquiso por todos os animais {word}")
+    public void pesquisoPorTodosOsAnimaisAvailable(String status) {
+        actualPetsResponse = petApi.getPetsResponseByStatus(status);
+    }
+
+    @Entao("recebo a lista com {int} animais {word}")
+    public void receboAListaComAnimaisAvailable(int petsQuantity, String status) {
+        actualPetsResponse.
+                then().
+                statusCode(HttpStatus.SC_OK).
+                body(
+                        "size()", is(petsQuantity),
+                        "findAll { it.status == '" + status + "' }.size()", is(petsQuantity)
+                );
+    }
+
+    @E("{int} animais possuem o nome {word}")
+    public void animaisPossuemONomeLion(int petQuantity, String petName) {
+        actualPetsResponse.
+                then().
+                body(
+                  "findAll { it.name.contains('"+petName+"')}.size()", is(petQuantity)
+                );
     }
 }
