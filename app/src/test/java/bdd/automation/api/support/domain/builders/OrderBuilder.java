@@ -1,8 +1,8 @@
 package bdd.automation.api.support.domain.builders;
 
-import bdd.automation.api.support.domain.Loja;
+import bdd.automation.api.support.domain.Order;
 
-public class LojaBuilder {
+public class OrderBuilder {
     private int id;
     private int petId;
     private int quantity;
@@ -10,42 +10,42 @@ public class LojaBuilder {
     private String status;
     private boolean complete;
 
-    public LojaBuilder() {
+    public OrderBuilder() {
         reset();
     }
 
-    public LojaBuilder withId(int id) {
+    public OrderBuilder withId(int id) {
         this.id = id;
         return this;
     }
 
-    public LojaBuilder withPetId(int petId) {
+    public OrderBuilder withPetId(int petId) {
         this.petId = petId;
         return this;
     }
 
-    public LojaBuilder withQuantity(int quantity) {
+    public OrderBuilder withQuantity(int quantity) {
         this.quantity = quantity;
         return this;
     }
 
-    public LojaBuilder withShipDate(String shipDate) {
+    public OrderBuilder withShipDate(String shipDate) {
         this.shipDate = shipDate;
         return this;
     }
 
-    public LojaBuilder withStatus(String status) {
+    public OrderBuilder withStatus(String status) {
         this.status = status;
         return this;
     }
 
-    public LojaBuilder withComplete(Boolean complete) {
+    public OrderBuilder withComplete(Boolean complete) {
         this.complete = complete;
         return this;
     }
 
-    public Loja build() {
-        return new Loja(
+    public Order build() {
+        return new Order(
                 id,
                 petId,
                 quantity,

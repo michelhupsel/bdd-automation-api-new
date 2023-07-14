@@ -1,21 +1,62 @@
 package bdd.automation.api.steps;
 
-import bdd.automation.api.support.domain.Loja;
-import bdd.automation.api.support.domain.builders.LojaBuilder;
+import bdd.automation.api.support.api.PetApi;
+import bdd.automation.api.support.api.StoreApi;
+import bdd.automation.api.support.domain.Order;
+import bdd.automation.api.support.domain.Pet;
+import bdd.automation.api.support.domain.builders.OrderBuilder;
 import io.cucumber.java.pt.Dado;
+import io.cucumber.java.pt.Entao;
+import io.cucumber.java.pt.Quando;
+import io.restassured.response.Response;
+
+import static org.hamcrest.Matchers.is;
 
 public class LojaStepDefinitions {
-    @Dado("alguma coisa")
-    public void algumaCoisa() {
-        Loja loja1 = new LojaBuilder()
-                .withId(1)
-                .withPetId(23)
-                .withQuantity(4)
+
+    PetApi petApi;
+    Pet expectedPet;
+    StoreApi storeApi;
+    Order expectedOrder;
+
+
+    public LojaStepDefinitions(){
+
+        petApi = new PetApi();
+        storeApi = new StoreApi();
+    }
+
+    @Dado("que eu possua um animal {word}")
+    public void queEuPossuaUmAnimalAvailable(String status) {
+        Pet pet = Pet.builder()
+                .id(85)
+                .status(status)
                 .build();
 
-        Loja loja2 = new LojaBuilder().build();
+        expectedPet = petApi.createPet(pet);
 
+    }
 
-        System.out.println("teste");
+    @Quando("faco o pedido desse animal")
+    public void facoOPedidoDesseAnimal() {
+
+        Order order = new OrderBuilder()
+                .withId(120)
+                .withPetId(expectedPet.getId())
+                .build();
+        expectedOrder = storeApi.createOrder(order);
+    }
+
+    @Entao("o pedido e aprovado")
+    public void oPedidoEAprovado() {
+        Response actualOrderResponse = storeApi.getOrder(expectedOrder.getId());
+        actualOrderResponse.
+                then().
+                body(
+                        "id", is(expectedOrder.getId()),
+                        "petId", is(expectedPet.getId()),
+                        "quantity", is(expectedOrder.getQuantity()),
+                        "status", is("approved")
+                        );
     }
 }

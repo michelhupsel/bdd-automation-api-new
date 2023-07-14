@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class Loja {
+public class Order {
     private int id;
     private int petId;
     private int quantity;
